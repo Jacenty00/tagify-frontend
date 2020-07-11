@@ -7,10 +7,12 @@ import {
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import Token, { User } from '../../utils/BackendAPI';
+import { AppContext } from './App';
 
 export function UserMenu(props) {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
+  const context = React.useContext(AppContext);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -46,6 +48,14 @@ export function UserMenu(props) {
     prevOpen.current = open;
   }, [open]);
 
+  // React.useEffect(() => {
+  //   User.getUser().then((data) => {
+  //     if (data.data !== undefined) {
+  //       setUser(data.data.nickname);
+  //     }
+  //   });
+  // }, []);
+
   return (
     <div>
       <IconButton
@@ -78,6 +88,9 @@ export function UserMenu(props) {
                   id="menu-list-grow"
                   onKeyDown={handleListKeyDown}
                 >
+                  <MenuItem style={{ fontWeight: "bold" }}>
+                    {context.user.get}
+                  </MenuItem>
                   <MenuItem
                     onClick={handleClose}
                     component={Link}

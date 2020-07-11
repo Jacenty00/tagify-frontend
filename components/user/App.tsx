@@ -23,7 +23,8 @@ import MyAlbums from './MyAlbums';
 import { Settings } from './Settings';
 import { UserMenu } from './UserMenu';
 
-export function App() {
+export const AppContext = React.createContext();
+export function App(props) {
   const useStyles = makeStyles((theme: Theme) => ({
     root: {
       padding: "2px 4px",
@@ -40,6 +41,9 @@ export function App() {
     },
   }));
   const classes = useStyles();
+
+  const [userNick, setUserNick] = React.useState(props.user);
+  const store = { user: { get: userNick, set: setUserNick } };
 
   return (
     <>
@@ -99,14 +103,20 @@ export function App() {
             <IconButton component={Link} to={"/addalbum"}>
               <AddIcon />
             </IconButton>
-            <UserMenu />
+            <AppContext.Provider value={store}>
+              <UserMenu />
+            </AppContext.Provider>
           </div>
         }
       >
         <div>
           <Route exact path="/" component={DashBoard} />
           <Route path="/impressum" component={Impressum} />
-          <Route path="/settings" component={Settings} />
+          <Route path="/settings">
+            <AppContext.Provider value={store}>
+              <Settings />
+            </AppContext.Provider>
+          </Route>
           <Route exact path="/album">
             <Redirect to="/"></Redirect>
           </Route>

@@ -6,6 +6,7 @@ import {
 import TextField from '@material-ui/core/TextField';
 
 import { User } from '../../utils/BackendAPI';
+import { AppContext } from './App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 export function Settings() {
   const [password, setPassword] = useState({ password1: "", password2: "" });
   const [nick, setNick] = useState("");
+  const context = React.useContext(AppContext);
 
   function handleNickChange(e) {
     setNick(e.target.value);
@@ -65,8 +67,10 @@ export function Settings() {
   function handleNickSubmit(e) {
     e.preventDefault();
     User.updateNick({ nickname: nick }).then((responseCode) => {
-      if (responseCode == "Ok") alert("Nickname changed!");
-      else alert("Server returned error: " + responseCode);
+      if (responseCode == "Ok") {
+        context.user.set(nick);
+        alert("Nickname changed!");
+      } else alert("Server returned error: " + responseCode);
     });
   }
 
